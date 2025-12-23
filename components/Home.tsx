@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mood, UserStats } from '../types';
-import { fetchStats, updateXPAndActivity, getXPForNextLevel, BADGES } from '../services/gamificationService';
+import { fetchStats, updateXPAndActivity } from '../services/gamificationService';
 import { supabase } from '../services/supabaseClient';
 
 const Home: React.FC = () => {
@@ -26,10 +26,6 @@ const Home: React.FC = () => {
     window.addEventListener('activity-recorded', handleActivity);
     return () => window.removeEventListener('activity-recorded', handleActivity);
   }, []);
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-  };
 
   const handleSaveMood = async () => {
     if (!selectedMood || !user) return;
@@ -61,84 +57,52 @@ const Home: React.FC = () => {
     );
   }
 
-  const xpPercent = (stats.xp / getXPForNextLevel(stats.level)) * 100;
-
-  const renderGarden = () => {
-    const icons = ['🌱', '🌿', '☘️', '🍀', '🌸', '🌼', '🌻', '🌲', '🌳', '🌈'];
-    const activeIcons = icons.slice(0, Math.min(stats.level, icons.length));
-    
-    return (
-      <div className="flex flex-wrap justify-center gap-4 py-8 animate-in fade-in zoom-in duration-700">
-        {activeIcons.map((emoji, i) => (
-          <div key={i} className="text-4xl animate-bounce" style={{ animationDelay: `${i * 0.1}s` }}>
-            {emoji}
-          </div>
-        ))}
-      </div>
-    );
-  };
-
   return (
     <div className="h-full flex flex-col bg-slate-50 scroll-container page-enter pb-32">
-      <header className="px-8 pt-12 pb-6 bg-white/50 backdrop-blur-md sticky top-0 z-10 border-b border-slate-100/50">
-        <div className="flex justify-between items-start mb-4">
+      <header className="px-8 pt-12 pb-8 bg-white/50 backdrop-blur-md sticky top-0 z-10 border-b border-slate-100/50">
+        <div className="flex justify-between items-start mb-2">
           <div>
-            <p className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mb-1">Level {stats.level}</p>
+            <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-1">Welcome Back</p>
             <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
               Hello, {user?.email?.split('@')[0] || 'Soul'}.
             </h1>
           </div>
-          <div className="flex flex-col items-end gap-2">
-            <button 
-              onClick={handleLogout}
-              className="text-[10px] font-black text-slate-400 hover:text-red-500 uppercase tracking-widest transition-colors flex items-center gap-1"
-            >
-              <i className="fa-solid fa-arrow-right-from-bracket"></i>
-              Logout
-            </button>
-            <div className="bg-sky-100 px-3 py-1.5 rounded-full flex items-center gap-1.5">
-              <i className="fa-solid fa-fire text-sky-500 text-xs"></i>
-              <span className="text-sky-800 text-xs font-bold">{stats.streak}d</span>
-            </div>
+          <button 
+            onClick={() => navigate('/crisis')}
+            className="w-10 h-10 rounded-full bg-red-50 text-red-500 flex items-center justify-center shadow-sm border border-red-100 transition-transform active:scale-90"
+            title="Emergency Help"
+          >
+            <i className="fa-solid fa-shield-heart"></i>
+          </button>
+        </div>
+        <div className="flex items-center gap-2 mt-2">
+          <div className="bg-sky-100 px-3 py-1 rounded-full flex items-center gap-1.5 border border-sky-200/50">
+            <i className="fa-solid fa-fire text-sky-500 text-[10px]"></i>
+            <span className="text-sky-800 text-[10px] font-black uppercase tracking-wider">{stats.streak} Day Streak</span>
           </div>
-        </div>
-        
-        <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-          <div 
-            className="h-full bg-gradient-to-r from-sky-400 to-indigo-500 transition-all duration-1000"
-            style={{ width: `${xpPercent}%` }}
-          ></div>
-        </div>
-        <div className="flex justify-between mt-1">
-          <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest">{stats.xp} XP</span>
-          <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest">{getXPForNextLevel(stats.level)} XP NEXT</span>
+          <div className="bg-slate-100 px-3 py-1 rounded-full flex items-center gap-1.5 border border-slate-200/50">
+            <i className="fa-solid fa-star text-slate-400 text-[10px]"></i>
+            <span className="text-slate-600 text-[10px] font-black uppercase tracking-wider">Level {stats.level}</span>
+          </div>
         </div>
       </header>
 
-      <div className="px-6 space-y-8 flex-1">
-        <section className="mt-4 bg-white rounded-[2.5rem] p-4 shadow-sm border border-slate-100 overflow-hidden">
-          <div className="flex justify-between items-center mb-2 px-4 pt-2">
-            <h3 className="text-slate-800 font-black text-[10px] uppercase tracking-widest">Growth Visualization</h3>
-            <span className="text-[10px] text-sky-500 font-bold">Lvl {stats.level} Garden</span>
-          </div>
-          <div className="bg-slate-50/50 rounded-[2rem] border border-slate-50 min-h-[140px] flex items-center justify-center">
-            {renderGarden()}
-          </div>
-        </section>
-
+      <div className="px-6 space-y-8 flex-1 mt-6">
         <section>
-          <div className="bg-white rounded-[2.5rem] p-8 shadow-[0_12px_40px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col items-center">
+          <div className="bg-white rounded-[2.5rem] p-10 shadow-[0_12px_40px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col items-center relative overflow-hidden group">
+             <div className="absolute -top-24 -right-24 w-64 h-64 bg-sky-50 rounded-full transition-transform group-hover:scale-110"></div>
              <div className="relative mb-6">
                 <div className="absolute inset-0 bg-sky-400 rounded-full blur-2xl opacity-20 animate-pulse"></div>
                 <button
                   onClick={() => navigate('/rescue')}
-                  className="relative w-40 h-40 rounded-full bg-gradient-to-br from-sky-400 to-sky-600 shadow-2xl shadow-sky-200 flex flex-col items-center justify-center text-white transition-all active:scale-90 hover:scale-105 group"
+                  className="relative w-40 h-40 rounded-full bg-gradient-to-br from-sky-400 to-sky-600 shadow-2xl shadow-sky-200 flex flex-col items-center justify-center text-white transition-all active:scale-90 hover:scale-105"
                 >
-                  <i className="fa-solid fa-wind text-4xl mb-2 group-hover:rotate-12 transition-transform"></i>
-                  <span className="text-sm font-black uppercase tracking-widest">Rescue Session</span>
-                  <span className="text-[8px] opacity-70 mt-1">+25 XP</span>
+                  <i className="fa-solid fa-wind text-4xl mb-2"></i>
+                  <span className="text-sm font-black uppercase tracking-widest">Rescue</span>
+                  <span className="text-[8px] opacity-70 mt-1 uppercase tracking-widest font-bold">+25 XP</span>
                 </button>
              </div>
+             <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Find calm in minutes</p>
           </div>
         </section>
 
@@ -146,7 +110,7 @@ const Home: React.FC = () => {
           <div className="bg-white rounded-[2.5rem] p-7 shadow-[0_12px_40px_rgba(0,0,0,0.03)] border border-slate-100">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-slate-800 font-black text-xs uppercase tracking-widest">Daily Log</h3>
-              <span className="text-[10px] font-bold text-sky-500">+10 XP</span>
+              <span className="text-[10px] font-bold text-sky-500 uppercase">+10 XP</span>
             </div>
             
             <div className="flex justify-around mb-6">
@@ -178,28 +142,20 @@ const Home: React.FC = () => {
                   disabled={isSyncing}
                   className="w-full bg-slate-900 text-white text-xs font-black uppercase tracking-widest py-4 rounded-2xl active:scale-95 transition-all shadow-lg flex items-center justify-center"
                 >
-                  {isSyncing ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : 'Unlock 10 XP'}
+                  {isSyncing ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : 'Log Reflection'}
                 </button>
               </div>
             )}
           </div>
         </section>
 
-        <section>
-          <h3 className="text-slate-800 font-black text-xs uppercase tracking-widest mb-4 ml-1">Achievements</h3>
-          <div className="flex gap-4 overflow-x-auto pb-4 scroll-container">
-            {BADGES.map((badge) => {
-              const isUnlocked = stats.badges.includes(badge.id);
-              return (
-                <div key={badge.id} className={`shrink-0 w-28 h-32 rounded-3xl p-4 flex flex-col items-center justify-center border transition-all ${isUnlocked ? 'bg-white border-sky-100 shadow-sm' : 'bg-slate-100/50 border-slate-100 opacity-40 grayscale'}`}>
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${isUnlocked ? 'bg-sky-50 text-sky-500' : 'bg-slate-200 text-slate-400'}`}>
-                    <i className={`fa-solid ${badge.icon}`}></i>
-                  </div>
-                  <p className="text-[9px] font-black text-center text-slate-800 uppercase tracking-tight leading-none mb-1">{badge.name}</p>
-                </div>
-              );
-            })}
-          </div>
+        <section className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden group active:scale-[0.98] transition-all cursor-pointer" onClick={() => navigate('/chat')}>
+           <div className="absolute right-0 bottom-0 opacity-10 group-hover:scale-110 transition-transform">
+             <i className="fa-solid fa-robot text-9xl translate-x-10 translate-y-10"></i>
+           </div>
+           <p className="text-[10px] font-black uppercase tracking-widest text-sky-400 mb-1">Assistant</p>
+           <h3 className="text-xl font-bold mb-2">Speak with Calm AI</h3>
+           <p className="text-xs text-slate-400 max-w-[180px]">Compassionate support whenever you need a listening ear.</p>
         </section>
       </div>
     </div>

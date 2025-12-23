@@ -8,6 +8,7 @@ import MoodTracker from './components/MoodTracker';
 import CrisisResources from './components/CrisisResources';
 import AIChat from './components/AIChat';
 import LiveVoiceChat from './components/LiveVoiceChat';
+import Profile from './components/Profile';
 import Auth from './components/Auth';
 
 const Navigation = () => {
@@ -19,8 +20,8 @@ const Navigation = () => {
   const navItems = [
     { path: '/', icon: 'fa-house', label: 'Home' },
     { path: '/mood', icon: 'fa-chart-line', label: 'Journal' },
-    { path: '/chat', icon: 'fa-comment-dots', label: 'Calm AI' },
-    { path: '/crisis', icon: 'fa-shield-heart', label: 'Help' },
+    { path: '/chat', icon: 'fa-comment-dots', label: 'AI' },
+    { path: '/profile', icon: 'fa-user-astronaut', label: 'Me' },
   ];
 
   return (
@@ -92,6 +93,7 @@ const App: React.FC = () => {
               <Route path="/chat" element={<AIChat />} />
               <Route path="/voice-chat" element={<LiveVoiceChat />} />
               <Route path="/crisis" element={<CrisisResources />} />
+              <Route path="/profile" element={<Profile />} />
             </Routes>
           </div>
           <Navigation />
