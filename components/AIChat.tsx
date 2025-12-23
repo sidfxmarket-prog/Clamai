@@ -1,9 +1,11 @@
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getCalmResponse } from '../services/geminiService';
 import { ChatMessage } from '../types';
 
 const AIChat: React.FC = () => {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: 'model', text: 'Hi, I’m your Calm Companion. Take a deep breath. How can I support you right now?' }
   ]);
@@ -36,7 +38,7 @@ const AIChat: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col bg-white page-enter">
-      <header className="px-8 pt-12 pb-4 bg-white/80 backdrop-blur-md border-b border-slate-50 sticky top-0 z-10">
+      <header className="px-8 pt-12 pb-4 bg-white/80 backdrop-blur-md border-b border-slate-50 sticky top-0 z-10 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center text-sky-500">
@@ -49,6 +51,14 @@ const AIChat: React.FC = () => {
             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">Listening now</p>
           </div>
         </div>
+        
+        <button 
+          onClick={() => navigate('/voice-chat')}
+          className="bg-sky-50 text-sky-600 px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-sky-100 transition-colors shadow-sm"
+        >
+          <i className="fa-solid fa-microphone-lines"></i>
+          Voice
+        </button>
       </header>
 
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4 scroll-container" ref={scrollRef}>

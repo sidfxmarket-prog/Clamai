@@ -6,10 +6,11 @@ import RescueSession from './components/RescueSession';
 import MoodTracker from './components/MoodTracker';
 import CrisisResources from './components/CrisisResources';
 import AIChat from './components/AIChat';
+import LiveVoiceChat from './components/LiveVoiceChat';
 
 const Navigation = () => {
   const location = useLocation();
-  const isRescue = location.pathname === '/rescue';
+  const isRescue = location.pathname === '/rescue' || location.pathname === '/voice-chat';
 
   if (isRescue) return null;
 
@@ -57,6 +58,7 @@ const App: React.FC = () => {
               <Route path="/rescue" element={<RescueSession />} />
               <Route path="/mood" element={<MoodTracker />} />
               <Route path="/chat" element={<AIChat />} />
+              <Route path="/voice-chat" element={<LiveVoiceChat />} />
               <Route path="/crisis" element={<CrisisResources />} />
             </Routes>
           </div>

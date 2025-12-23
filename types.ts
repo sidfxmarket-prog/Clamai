@@ -38,3 +38,22 @@ export interface BreathingPattern {
   description: string;
   phases: BreathingPhase[];
 }
+
+// Gamification Types
+export interface Badge {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+  unlockedAt?: string;
+}
+
+export interface UserStats {
+  xp: number;
+  level: number;
+  totalSessions: number;
+  totalLogs: number;
+  badges: string[]; // IDs of unlocked badges
+  lastActivityDate: string;
+  streak: number;
+}

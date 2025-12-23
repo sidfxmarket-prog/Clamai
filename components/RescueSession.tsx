@@ -1,8 +1,10 @@
+
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BreathingExercise from './BreathingExercise';
 import { Mood, MoodEntry, BreathingPattern } from '../types';
 import { getVoiceInstruction } from '../services/voiceService';
+import { addXP, recordActivity } from '../services/gamificationService';
 
 const PATTERNS: BreathingPattern[] = [
   {
@@ -10,9 +12,9 @@ const PATTERNS: BreathingPattern[] = [
     name: 'Panic Rescue',
     description: 'Quick relief using 5-4-7 timing to calm the heart rate.',
     phases: [
-      { type: 'Inhale', duration: 5, instruction: 'Breathe in' },
-      { type: 'Hold', duration: 4, instruction: 'Hold' },
-      { type: 'Exhale', duration: 7, instruction: 'Breathe out' }
+      { type: 'Inhale', duration: 5, instruction: 'Breathe in slowly through your nose' },
+      { type: 'Hold', duration: 4, instruction: 'Hold your breath gently' },
+      { type: 'Exhale', duration: 7, instruction: 'Breathe out through pursed lips' }
     ]
   },
   {
@@ -20,9 +22,9 @@ const PATTERNS: BreathingPattern[] = [
     name: '4-7-8 Relax',
     description: 'A natural tranquilizer for the nervous system and deep sleep.',
     phases: [
-      { type: 'Inhale', duration: 4, instruction: 'Breathe in' },
-      { type: 'Hold', duration: 7, instruction: 'Hold' },
-      { type: 'Exhale', duration: 8, instruction: 'Breathe out' }
+      { type: 'Inhale', duration: 4, instruction: 'Inhale quietly through your nose' },
+      { type: 'Hold', duration: 7, instruction: 'Hold the breath for seven counts' },
+      { type: 'Exhale', duration: 8, instruction: 'Exhale completely with a soft whoosh' }
     ]
   },
   {
@@ -30,9 +32,9 @@ const PATTERNS: BreathingPattern[] = [
     name: 'Physiological Sigh',
     description: 'The fastest way to lower your heart rate and anxiety.',
     phases: [
-      { type: 'Inhale', duration: 4, instruction: 'Full breath in' },
-      { type: 'Hold', duration: 1, instruction: 'One more quick sip' },
-      { type: 'Exhale', duration: 8, instruction: 'Long sigh out' }
+      { type: 'Inhale', duration: 4, instruction: 'Take a deep, full breath in' },
+      { type: 'Hold', duration: 1, instruction: 'Now a quick second sip' },
+      { type: 'Exhale', duration: 8, instruction: 'Let out a long, vocal sigh' }
     ]
   },
   {
@@ -40,10 +42,10 @@ const PATTERNS: BreathingPattern[] = [
     name: 'Box Breathing',
     description: 'The Navy SEAL technique for focus and stress control.',
     phases: [
-      { type: 'Inhale', duration: 4, instruction: 'Breathe in' },
-      { type: 'Hold', duration: 4, instruction: 'Hold' },
-      { type: 'Exhale', duration: 4, instruction: 'Breathe out' },
-      { type: 'HoldOut', duration: 4, instruction: 'Wait' }
+      { type: 'Inhale', duration: 4, instruction: 'Inhale deeply for four' },
+      { type: 'Hold', duration: 4, instruction: 'Hold the space for four' },
+      { type: 'Exhale', duration: 4, instruction: 'Exhale steady for four' },
+      { type: 'HoldOut', duration: 4, instruction: 'Rest in the empty space' }
     ]
   }
 ];
@@ -71,23 +73,32 @@ const RescueSession: React.FC = () => {
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
     }
 
-    // Generate specific instructions for this pattern using the phase's direct instruction text
-    const phaseVoices = await Promise.all(
-      selectedPattern.phases.map(p => 
-        getVoiceInstruction(`${p.instruction}.`, audioContextRef.current!)
-      )
-    );
+    try {
+      // Pre-generate voice instructions for all phases of the selected pattern
+      const phaseVoices = await Promise.all(
+        selectedPattern.phases.map(p => 
+          getVoiceInstruction(`${p.instruction}.`, audioContextRef.current!)
+        )
+      );
 
-    const buffers: Record<string, AudioBuffer | null> = {};
-    selectedPattern.phases.forEach((p, i) => {
-      buffers[p.type] = phaseVoices[i];
-    });
+      const buffers: Record<string, AudioBuffer | null> = {};
+      selectedPattern.phases.forEach((p, i) => {
+        buffers[p.type] = phaseVoices[i];
+      });
 
-    voiceBuffersRef.current = buffers;
-    setStep('active');
+      voiceBuffersRef.current = buffers;
+      setStep('active');
+    } catch (err) {
+      console.error("Session start failed:", err);
+      // Fallback to starting without voice if it fails
+      setStep('active');
+    }
   };
 
   const handleComplete = () => {
+    // Award XP
+    addXP(25);
+    recordActivity('session');
     setStep('complete');
   };
 
@@ -101,21 +112,29 @@ const RescueSession: React.FC = () => {
     const saved = localStorage.getItem('mood_entries');
     const entries = saved ? JSON.parse(saved) : [];
     localStorage.setItem('mood_entries', JSON.stringify([newEntry, ...entries]));
+    
+    // Log Activity
+    addXP(10);
+    recordActivity('log');
+    
     navigate('/');
   };
 
   if (step === 'complete') {
     return (
       <div className="p-8 flex flex-col items-center justify-center h-full text-center space-y-8 animate-in slide-in-from-bottom duration-700">
-        <div className="bg-emerald-50 w-20 h-20 rounded-full flex items-center justify-center text-emerald-500 text-3xl shadow-inner shadow-emerald-100/50">
-          <i className="fa-solid fa-check"></i>
+        <div className="relative">
+          <div className="absolute inset-0 bg-emerald-400 rounded-full blur-2xl opacity-20 animate-pulse"></div>
+          <div className="relative bg-emerald-50 w-24 h-24 rounded-full flex items-center justify-center text-emerald-500 text-4xl shadow-inner shadow-emerald-100/50">
+            <i className="fa-solid fa-check"></i>
+          </div>
         </div>
         <div>
           <h2 className="text-2xl font-bold text-slate-800">Breath completed.</h2>
-          <p className="text-slate-500 mt-2">Take a moment to notice the stillness.</p>
+          <p className="text-emerald-600 font-bold uppercase text-[10px] tracking-widest mt-2">+25 XP EARNED</p>
         </div>
         <div className="w-full">
-          <p className="text-xs font-bold text-slate-400 mb-6 uppercase tracking-widest">How do you feel now?</p>
+          <p className="text-xs font-black text-slate-400 mb-6 uppercase tracking-widest">How do you feel now?</p>
           <div className="flex justify-center gap-4">
             {[Mood.HAPPY, Mood.NEUTRAL, Mood.SAD].map((m) => (
               <button
@@ -198,7 +217,7 @@ const RescueSession: React.FC = () => {
 
         <section className="space-y-4 mb-10">
           <div className="flex justify-between items-center px-1">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ambient Music</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">AI Voice Guidance</p>
             <button 
               onClick={() => setMusicEnabled(!musicEnabled)}
               className={`w-12 h-6 rounded-full transition-colors relative ${musicEnabled ? 'bg-sky-500' : 'bg-slate-200'}`}
@@ -206,7 +225,7 @@ const RescueSession: React.FC = () => {
               <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${musicEnabled ? 'left-7' : 'left-1'}`} />
             </button>
           </div>
-          <p className="text-[10px] text-slate-400 px-1">Soothing procedural audio during exercise.</p>
+          <p className="text-[10px] text-slate-400 px-1">Soothing AI narration and ambient chords.</p>
         </section>
 
         <button 
@@ -214,7 +233,7 @@ const RescueSession: React.FC = () => {
           className="mt-auto w-full bg-sky-500 text-white font-bold py-5 rounded-3xl shadow-xl shadow-sky-100 active:scale-95 hover:bg-sky-600 transition-all flex items-center justify-center gap-3"
         >
           <i className="fa-solid fa-wind"></i>
-          BEGIN SESSION
+          BEGIN SESSION (+25 XP)
         </button>
       </div>
     );
@@ -232,7 +251,7 @@ const RescueSession: React.FC = () => {
         <div className="space-y-3">
           <h3 className="text-2xl font-bold text-slate-800">Calming the space</h3>
           <p className="text-slate-400 text-sm leading-relaxed max-w-[240px] mx-auto">
-            We're generating a soothing voice guidance just for you.
+            We're preparing your personal AI guidance session.
           </p>
         </div>
       </div>

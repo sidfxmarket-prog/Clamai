@@ -1,6 +1,5 @@
-import { GoogleGenAI, Modality } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+import { GoogleGenAI, Modality } from "@google/genai";
 
 // PCM Decoding helpers as per Gemini API standards
 function decodeBase64(base64: string): Uint8Array {
@@ -32,19 +31,30 @@ async function decodeAudioData(
   return buffer;
 }
 
+/**
+ * Generates a soothing AI voice instruction using Gemini TTS.
+ * The prompt is optimized for a calm, professional mental health guidance tone.
+ */
 export async function getVoiceInstruction(
   text: string,
   audioContext: AudioContext
 ): Promise<AudioBuffer | null> {
   try {
+    // Instantiate AI right before use
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    
+    // We add specific behavioral cues to the prompt to ensure a "calm and soothing" delivery
+    const prompt = `Style: Gentle, soothing, and slow. Purpose: Mental health breathing guidance. 
+    Instruction: ${text}`;
+
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash-preview-tts",
-      contents: [{ parts: [{ text: `Say calmly and soothingly: ${text}` }] }],
+      contents: [{ parts: [{ text: prompt }] }],
       config: {
         responseModalities: [Modality.AUDIO],
         speechConfig: {
           voiceConfig: {
-            prebuiltVoiceConfig: { voiceName: 'Kore' },
+            prebuiltVoiceConfig: { voiceName: 'Kore' }, // Kore has a warm, balanced tone
           },
         },
       },
@@ -56,7 +66,7 @@ export async function getVoiceInstruction(
       return await decodeAudioData(audioBytes, audioContext);
     }
   } catch (error) {
-    console.error("TTS Generation Error:", error);
+    console.error("AI Guidance Generation Error:", error);
   }
   return null;
 }
