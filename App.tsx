@@ -1,12 +1,14 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { supabase } from './services/supabaseClient';
 import Home from './components/Home';
 import RescueSession from './components/RescueSession';
 import MoodTracker from './components/MoodTracker';
 import CrisisResources from './components/CrisisResources';
 import AIChat from './components/AIChat';
 import LiveVoiceChat from './components/LiveVoiceChat';
+import Auth from './components/Auth';
 
 const Navigation = () => {
   const location = useLocation();
@@ -48,6 +50,36 @@ const Navigation = () => {
 };
 
 const App: React.FC = () => {
+  const [session, setSession] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 bg-slate-50 flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-sky-100 border-t-sky-500 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return <Auth />;
+  }
+
   return (
     <HashRouter>
       <div className="fixed inset-0 bg-slate-50 flex justify-center items-center overflow-hidden">
