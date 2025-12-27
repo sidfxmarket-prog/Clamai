@@ -31,93 +31,87 @@ const Auth: React.FC = () => {
   };
 
   return (
-    <div className="min-h-full flex flex-col items-center justify-center p-6 bg-[#FDFEFF] animate-in fade-in duration-1000">
-      {/* Decorative Background Elements */}
-      <div className="fixed top-[-10%] right-[-10%] w-[300px] h-[300px] bg-sky-100 rounded-full blur-[120px] opacity-60 pointer-events-none"></div>
-      <div className="fixed bottom-[-10%] left-[-10%] w-[300px] h-[300px] bg-indigo-50 rounded-full blur-[120px] opacity-60 pointer-events-none"></div>
+    <div className="min-h-full flex flex-col items-center justify-center p-8 bg-[#fffbf0] relative overflow-hidden">
+      <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-main-grad opacity-[0.03] blur-[150px] pointer-events-none"></div>
 
-      <div className="w-full max-w-sm z-10 space-y-8">
-        {/* Branding Header */}
-        <div className="text-center space-y-4">
-          <div className="relative inline-block group">
-            <div className="absolute inset-0 bg-sky-400 rounded-[2.2rem] blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
-            <div className="relative w-20 h-20 bg-gradient-to-br from-sky-400 to-sky-600 rounded-[2.2rem] flex items-center justify-center mx-auto shadow-2xl shadow-sky-200/50 mb-2 transform group-hover:scale-105 transition-transform duration-500">
-              <i className="fa-solid fa-leaf text-white text-3xl animate-pulse"></i>
+      <div className="w-full max-w-sm z-10 space-y-12">
+        <div className="text-center space-y-6">
+          <div className="relative inline-block group float">
+            <div className="absolute inset-0 bg-main-grad rounded-[2.5rem] blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000"></div>
+            <div className="relative w-24 h-24 bg-main-grad rounded-[2.5rem] flex items-center justify-center mx-auto shadow-2xl">
+              <i className="fa-solid fa-sparkles text-white text-4xl"></i>
             </div>
           </div>
-          <div className="space-y-1">
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight">Calm Companion</h1>
-            <p className="text-slate-400 text-sm font-semibold tracking-wide uppercase opacity-80">The Art of Stillness</p>
+          <div className="space-y-2">
+            <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Companion</h1>
+            <p className="text-purple-400 text-sm font-bold tracking-[0.4em] uppercase opacity-60">The Art of Stillness</p>
           </div>
         </div>
 
-        {/* Auth Container */}
-        <div className="bg-white/70 backdrop-blur-2xl rounded-[3.5rem] p-3 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)] border border-white/80">
-          
-          {/* Tab Switcher */}
-          <div className="flex p-1.5 bg-slate-50/50 rounded-[2.5rem] mb-3">
+        <div className="glass rounded-[3.5rem] p-4 shadow-[0_40px_100px_rgba(0,0,0,0.1)] border border-white/60">
+          <div className="flex p-2 bg-purple-50/50 rounded-[2.5rem] mb-6">
             <button 
               onClick={() => { setIsSignUp(false); setMessage(null); }}
-              className={`flex-1 py-3.5 rounded-[2rem] text-xs font-black uppercase tracking-widest transition-all duration-500 ${!isSignUp ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`flex-1 py-4 rounded-[2rem] text-[10px] font-black uppercase tracking-widest transition-all duration-500 ${!isSignUp ? 'bg-white text-slate-900 shadow-xl' : 'text-slate-400'}`}
             >
               Log In
             </button>
             <button 
               onClick={() => { setIsSignUp(true); setMessage(null); }}
-              className={`flex-1 py-3.5 rounded-[2rem] text-xs font-black uppercase tracking-widest transition-all duration-500 ${isSignUp ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`flex-1 py-4 rounded-[2rem] text-[10px] font-black uppercase tracking-widest transition-all duration-500 ${isSignUp ? 'bg-white text-slate-900 shadow-xl' : 'text-slate-400'}`}
             >
               Sign Up
             </button>
           </div>
 
-          <div className="px-6 pt-4 pb-8 space-y-6">
+          <div className="px-6 pb-10 space-y-8">
             <div className="text-center">
-              <h2 className="text-xl font-extrabold text-slate-800">
-                {isSignUp ? 'Create your space' : 'Welcome home'}
+              <h2 className="text-2xl font-extrabold text-slate-800">
+                {isSignUp ? 'Begin your journey' : 'Welcome back'}
               </h2>
-              <p className="text-slate-400 text-xs mt-1 font-medium">
-                {isSignUp ? 'Begin your personalized journey' : 'Sign in to your sanctuary'}
+              <p className="text-slate-400 text-[11px] mt-2 font-bold uppercase tracking-widest">
+                {isSignUp ? 'personalized support awaits' : 'your sanctuary is ready'}
               </p>
             </div>
 
             {message && (
-              <div className={`p-4 rounded-[1.5rem] text-[11px] font-bold text-center animate-in zoom-in-95 duration-300 ${
-                message.type === 'error' ? 'bg-red-50 text-red-500 border border-red-100/50' : 'bg-emerald-50 text-emerald-600 border border-emerald-100/50'
+              <div className={`p-5 rounded-[1.8rem] text-[11px] font-black text-center animate-in zoom-in-95 duration-300 ${
+                message.type === 'error' ? 'bg-rose-50 text-rose-500 border border-rose-100' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'
               }`}>
                 {message.text}
               </div>
             )}
 
-            <form onSubmit={handleAuth} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Email</label>
+            <form onSubmit={handleAuth} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-5">Email</label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-slate-300 group-focus-within:text-sky-400 transition-colors">
-                    <i className="fa-solid fa-envelope text-xs"></i>
+                  <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-slate-300 group-focus-within:text-purple-400 transition-colors">
+                    <i className="fa-solid fa-at text-sm"></i>
                   </div>
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-slate-50/50 border-none rounded-[1.5rem] pl-12 pr-5 py-4 text-sm text-slate-700 outline-none ring-1 ring-slate-100 focus:ring-2 focus:ring-sky-200 focus:bg-white transition-all duration-300"
-                    placeholder="you@example.com"
+                    className="w-full bg-white border border-slate-50 rounded-[2rem] pl-14 pr-6 py-5 text-sm text-slate-700 outline-none focus:ring-4 focus:ring-purple-100 transition-all duration-500"
+                    placeholder="name@email.com"
                   />
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Password</label>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-5">Password</label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-slate-300 group-focus-within:text-sky-400 transition-colors">
-                    <i className="fa-solid fa-lock text-xs"></i>
+                  <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-slate-300 group-focus-within:text-purple-400 transition-colors">
+                    <i className="fa-solid fa-shield-halved text-sm"></i>
                   </div>
                   <input
                     type="password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-slate-50/50 border-none rounded-[1.5rem] pl-12 pr-5 py-4 text-sm text-slate-700 outline-none ring-1 ring-slate-100 focus:ring-2 focus:ring-sky-200 focus:bg-white transition-all duration-300"
+                    className="w-full bg-white border border-slate-50 rounded-[2rem] pl-14 pr-6 py-5 text-sm text-slate-700 outline-none focus:ring-4 focus:ring-purple-100 transition-all duration-500"
                     placeholder="••••••••"
                   />
                 </div>
@@ -126,14 +120,14 @@ const Auth: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-sky-500 to-indigo-600 text-white font-black uppercase tracking-[0.15em] py-4.5 rounded-[1.5rem] shadow-[0_12px_24px_-8px_rgba(14,165,233,0.4)] active:scale-[0.97] hover:scale-[1.01] transition-all duration-300 disabled:opacity-50 mt-4 flex items-center justify-center gap-3 group"
+                className="w-full bg-slate-900 text-white font-black uppercase tracking-[0.3em] py-6 rounded-[2rem] shadow-2xl active:scale-[0.97] transition-all duration-500 disabled:opacity-20 mt-6 flex items-center justify-center gap-4 group"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                 ) : (
                   <>
-                    <span>{isSignUp ? 'Get Started' : 'Enter Now'}</span>
-                    <i className="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+                    <span className="text-[11px]">{isSignUp ? 'Create Space' : 'Enter Sanctuary'}</span>
+                    <i className="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-2 transition-transform"></i>
                   </>
                 )}
               </button>
@@ -141,11 +135,9 @@ const Auth: React.FC = () => {
           </div>
         </div>
 
-        <div className="text-center space-y-4">
-          <p className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.3em]">
-            Privacy Centric • Secure 256-bit
-          </p>
-        </div>
+        <p className="text-[10px] text-center text-slate-300 font-bold uppercase tracking-[0.5em]">
+          Cloud Synced • Private
+        </p>
       </div>
     </div>
   );

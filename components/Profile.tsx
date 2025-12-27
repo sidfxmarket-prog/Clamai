@@ -26,8 +26,8 @@ const Profile: React.FC = () => {
 
   if (!stats) {
     return (
-      <div className="h-full flex items-center justify-center bg-slate-50">
-        <div className="w-10 h-10 border-4 border-sky-100 border-t-sky-500 rounded-full animate-spin"></div>
+      <div className="h-full flex items-center justify-center bg-orange-50/20">
+        <div className="w-10 h-10 border-4 border-purple-100 border-t-purple-500 rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -50,21 +50,21 @@ const Profile: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col bg-slate-50 scroll-container page-enter pb-32">
-      <header className="px-8 pt-12 pb-6 bg-white border-b border-slate-100">
+    <div className="h-full flex flex-col bg-orange-50/20 scroll-container page-enter pb-32">
+      <header className="px-8 pt-12 pb-6 bg-white border-b border-orange-50">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-gradient-to-br from-sky-400 to-indigo-500 rounded-[1.5rem] flex items-center justify-center text-white text-xl font-black shadow-lg shadow-sky-100">
+            <div className="w-14 h-14 bg-gradient-to-br from-purple-400 to-pink-500 rounded-[1.5rem] flex items-center justify-center text-white text-xl font-black shadow-lg shadow-purple-100">
               {user?.email?.[0].toUpperCase()}
             </div>
             <div>
               <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">Your Journey</h1>
-              <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">{user?.email}</p>
+              <p className="text-orange-400 text-xs font-bold uppercase tracking-widest">{user?.email}</p>
             </div>
           </div>
           <button 
             onClick={handleLogout}
-            className="w-10 h-10 rounded-full bg-slate-100 text-slate-400 hover:text-red-500 transition-colors flex items-center justify-center"
+            className="w-10 h-10 rounded-full bg-orange-50 text-orange-400 hover:text-rose-500 transition-colors flex items-center justify-center"
             title="Logout"
           >
             <i className="fa-solid fa-arrow-right-from-bracket text-sm"></i>
@@ -73,12 +73,12 @@ const Profile: React.FC = () => {
 
         <div className="space-y-2">
           <div className="flex justify-between items-end">
-            <span className="text-[10px] font-black text-sky-600 uppercase tracking-widest">Level {stats.level}</span>
-            <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{stats.xp} / {getXPForNextLevel(stats.level)} XP</span>
+            <span className="text-[10px] font-black text-purple-600 uppercase tracking-widest">Level {stats.level}</span>
+            <span className="text-[10px] font-black text-orange-300 uppercase tracking-widest">{stats.xp} / {getXPForNextLevel(stats.level)} XP</span>
           </div>
-          <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+          <div className="h-2 w-full bg-orange-50 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-gradient-to-r from-sky-400 to-indigo-500 transition-all duration-1000"
+              className="h-full bg-gradient-to-r from-purple-400 to-pink-500 transition-all duration-1000"
               style={{ width: `${xpPercent}%` }}
             ></div>
           </div>
@@ -88,29 +88,29 @@ const Profile: React.FC = () => {
       <div className="px-6 py-8 space-y-8">
         {/* Quick Stats Grid */}
         <section className="grid grid-cols-2 gap-4">
-          <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm text-center">
-            <p className="text-slate-400 text-[9px] font-black uppercase tracking-widest mb-1">Sessions</p>
+          <div className="bg-white p-5 rounded-[2rem] border border-orange-50 shadow-sm text-center">
+            <p className="text-orange-400 text-[9px] font-black uppercase tracking-widest mb-1">Sessions</p>
             <p className="text-2xl font-bold text-slate-900">{stats.totalSessions}</p>
           </div>
-          <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm text-center">
-            <p className="text-slate-400 text-[9px] font-black uppercase tracking-widest mb-1">Streak</p>
+          <div className="bg-white p-5 rounded-[2rem] border border-orange-50 shadow-sm text-center">
+            <p className="text-orange-400 text-[9px] font-black uppercase tracking-widest mb-1">Streak</p>
             <div className="flex items-center justify-center gap-2">
-              <i className="fa-solid fa-fire text-sky-500 text-sm"></i>
+              <i className="fa-solid fa-fire text-purple-500 text-sm"></i>
               <p className="text-2xl font-bold text-slate-900">{stats.streak}d</p>
             </div>
           </div>
         </section>
 
         {/* Growth Garden Visualization */}
-        <section className="bg-white rounded-[2.5rem] p-6 shadow-sm border border-slate-100">
+        <section className="bg-white rounded-[2.5rem] p-6 shadow-sm border border-orange-50">
           <div className="flex justify-between items-center mb-4 px-2">
             <h3 className="text-slate-800 font-black text-[10px] uppercase tracking-widest">Growth Visualization</h3>
-            <span className="text-[10px] text-sky-500 font-bold uppercase tracking-widest">Garden Progress</span>
+            <span className="text-[10px] text-pink-500 font-bold uppercase tracking-widest">Garden Progress</span>
           </div>
-          <div className="bg-slate-50/50 rounded-[2rem] border border-slate-100 min-h-[160px] flex items-center justify-center">
+          <div className="bg-orange-50/30 rounded-[2rem] border border-orange-50 min-h-[160px] flex items-center justify-center">
             {renderGarden()}
           </div>
-          <p className="text-[9px] text-slate-400 text-center mt-4 font-bold uppercase tracking-widest px-4 leading-relaxed">
+          <p className="text-[9px] text-orange-300 text-center mt-4 font-bold uppercase tracking-widest px-4 leading-relaxed">
             Your inner garden flourishes as you level up. Keep practicing to see new growth.
           </p>
         </section>
@@ -122,12 +122,12 @@ const Profile: React.FC = () => {
             {BADGES.map((badge) => {
               const isUnlocked = stats.badges.includes(badge.id);
               return (
-                <div key={badge.id} className={`p-5 rounded-[2rem] border transition-all flex flex-col items-center text-center ${isUnlocked ? 'bg-white border-sky-100 shadow-sm' : 'bg-slate-100/50 border-slate-100 opacity-50 grayscale'}`}>
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 text-lg ${isUnlocked ? 'bg-sky-50 text-sky-500 shadow-inner' : 'bg-slate-200 text-slate-400'}`}>
+                <div key={badge.id} className={`p-5 rounded-[2rem] border transition-all flex flex-col items-center text-center ${isUnlocked ? 'bg-white border-orange-100 shadow-sm' : 'bg-orange-50/30 border-orange-50 opacity-50 grayscale'}`}>
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 text-lg ${isUnlocked ? 'bg-orange-50 text-purple-500 shadow-inner' : 'bg-orange-100/50 text-orange-300'}`}>
                     <i className={`fa-solid ${badge.icon}`}></i>
                   </div>
                   <p className="text-[10px] font-black text-slate-800 uppercase tracking-tight mb-1">{badge.name}</p>
-                  <p className="text-[9px] text-slate-400 font-bold leading-tight">{badge.description}</p>
+                  <p className="text-[9px] text-orange-300 font-bold leading-tight">{badge.description}</p>
                 </div>
               );
             })}

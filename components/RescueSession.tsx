@@ -1,6 +1,6 @@
 
-import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import BreathingExercise from './BreathingExercise';
 import { Mood, BreathingPattern } from '../types';
 import { getVoiceInstruction } from '../services/voiceService';
@@ -48,13 +48,20 @@ const DURATIONS = [
 
 const RescueSession: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [step, setStep] = useState<'config' | 'loading' | 'active' | 'complete'>('config');
-  const [selectedPattern, setSelectedPattern] = useState(PATTERNS[0]);
+  const [selectedPattern, setSelectedPattern] = useState<BreathingPattern>(PATTERNS[0]);
   const [selectedDuration, setSelectedDuration] = useState(DURATIONS[0].value);
   const [musicEnabled, setMusicEnabled] = useState(true);
   
   const audioContextRef = useRef<AudioContext | null>(null);
   const voiceBuffersRef = useRef<Record<string, AudioBuffer | null>>({});
+
+  useEffect(() => {
+    if (location.state?.customPattern) {
+      setSelectedPattern(location.state.customPattern);
+    }
+  }, [location.state]);
 
   const startSession = async () => {
     setStep('loading');
@@ -97,32 +104,32 @@ const RescueSession: React.FC = () => {
 
   if (step === 'complete') {
     return (
-      <div className="p-8 flex flex-col items-center justify-center h-full text-center space-y-8 animate-in slide-in-from-bottom duration-700">
+      <div className="p-8 flex flex-col items-center justify-center h-full text-center space-y-8 animate-in slide-in-from-bottom duration-700 bg-white">
         <div className="relative">
-          <div className="bg-emerald-50 w-24 h-24 rounded-full flex items-center justify-center text-emerald-500 text-4xl shadow-inner">
+          <div className="bg-pink-50 w-24 h-24 rounded-full flex items-center justify-center text-pink-500 text-4xl shadow-inner">
             <i className="fa-solid fa-check"></i>
           </div>
         </div>
         <div>
           <h2 className="text-2xl font-bold text-slate-800">Breath completed.</h2>
-          <p className="text-emerald-600 font-bold uppercase text-[10px] tracking-widest mt-2">+25 XP EARNED</p>
+          <p className="text-pink-600 font-bold uppercase text-[10px] tracking-widest mt-2">+25 XP EARNED</p>
         </div>
         <div className="w-full">
           <p className="text-xs font-black text-slate-400 mb-6 uppercase tracking-widest">How do you feel now?</p>
-          <div className="flex justify-center gap-4">
-            {[Mood.HAPPY, Mood.NEUTRAL, Mood.SAD].map((m) => (
-              <button key={m} onClick={() => handleLogFeeling(m)} className="text-4xl p-6 bg-slate-50 rounded-3xl hover:bg-sky-50 transition-all active:scale-90">{m}</button>
+          <div className="grid grid-cols-4 gap-4 px-4">
+            {Object.values(Mood).map((m) => (
+              <button key={m} onClick={() => handleLogFeeling(m)} className="text-3xl p-4 bg-purple-50 rounded-2xl hover:bg-pink-50 transition-all active:scale-90">{m}</button>
             ))}
           </div>
         </div>
-        <button onClick={() => navigate('/')} className="text-sky-600 font-bold hover:text-sky-700 pt-4">Return Home</button>
+        <button onClick={() => navigate('/')} className="text-purple-600 font-bold hover:text-purple-700 pt-4">Return Home</button>
       </div>
     );
   }
 
   if (step === 'config') {
     return (
-      <div className="p-6 h-full flex flex-col animate-in fade-in duration-500 overflow-y-auto pb-24">
+      <div className="p-6 h-full flex flex-col animate-in fade-in duration-500 overflow-y-auto pb-24 bg-white">
         <div className="flex justify-between items-center mb-10">
           <div>
             <h2 className="text-2xl font-bold text-slate-800">Rescue Session</h2>
@@ -132,32 +139,47 @@ const RescueSession: React.FC = () => {
             <i className="fa-solid fa-xmark text-2xl"></i>
           </button>
         </div>
+        
+        {location.state?.customPattern && (
+          <div className="mb-8 p-6 bg-purple-50 rounded-[2.5rem] border border-purple-100 animate-in slide-in-from-top-4">
+             <div className="flex items-center gap-3 mb-2">
+                <i className="fa-solid fa-wand-magic-sparkles text-purple-600"></i>
+                <h3 className="font-black text-xs text-purple-800 uppercase tracking-widest">AI Generated Pattern</h3>
+             </div>
+             <p className="text-xl font-bold text-purple-900 mb-1">{location.state.customPattern.name}</p>
+             <p className="text-xs text-purple-600/70 leading-relaxed">{location.state.customPattern.description}</p>
+          </div>
+        )}
+
         <section className="space-y-4 mb-8">
+          <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Choose Technique</h3>
           <div className="grid gap-4">
             {PATTERNS.map(p => (
-              <button key={p.id} onClick={() => setSelectedPattern(p)} className={`text-left p-5 rounded-3xl border-2 transition-all ${selectedPattern.id === p.id ? 'border-sky-500 bg-sky-50 shadow-sm' : 'border-slate-100 bg-white'}`}>
-                <h3 className={`font-bold ${selectedPattern.id === p.id ? 'text-sky-700' : 'text-slate-700'}`}>{p.name}</h3>
+              <button key={p.id} onClick={() => { setSelectedPattern(p); navigate('.', { replace: true, state: {} }); }} className={`text-left p-5 rounded-3xl border-2 transition-all ${selectedPattern.id === p.id && !location.state?.customPattern ? 'border-purple-500 bg-purple-50 shadow-sm' : 'border-slate-100 bg-white'}`}>
+                <h3 className={`font-bold ${selectedPattern.id === p.id && !location.state?.customPattern ? 'text-purple-700' : 'text-slate-700'}`}>{p.name}</h3>
                 <p className="text-xs mt-1 text-slate-400">{p.description}</p>
               </button>
             ))}
           </div>
         </section>
+        
         <section className="space-y-4 mb-8">
+          <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Duration</h3>
           <div className="flex gap-3">
             {DURATIONS.map(d => (
               <button key={d.value} onClick={() => setSelectedDuration(d.value)} className={`flex-1 py-4 rounded-2xl border-2 font-bold text-xs ${selectedDuration === d.value ? 'bg-slate-800 text-white border-slate-800 shadow-lg' : 'border-slate-100 text-slate-400 bg-white'}`}>{d.label}</button>
             ))}
           </div>
         </section>
-        <button onClick={startSession} className="mt-auto w-full bg-sky-500 text-white font-bold py-5 rounded-3xl shadow-xl shadow-sky-100 transition-all">BEGIN SESSION (+25 XP)</button>
+        <button onClick={startSession} className="mt-auto w-full bg-purple-500 text-white font-bold py-5 rounded-3xl shadow-xl shadow-purple-100 transition-all">BEGIN SESSION (+25 XP)</button>
       </div>
     );
   }
 
   if (step === 'loading') {
     return (
-      <div className="h-full flex flex-col items-center justify-center p-12 text-center space-y-8 animate-in fade-in">
-        <div className="w-12 h-12 border-4 border-sky-50 border-t-sky-500 rounded-full animate-spin"></div>
+      <div className="h-full flex flex-col items-center justify-center p-12 text-center space-y-8 animate-in fade-in bg-white">
+        <div className="w-12 h-12 border-4 border-purple-50 border-t-purple-500 rounded-full animate-spin"></div>
         <p className="text-slate-400 text-sm font-bold uppercase tracking-widest">Pre-generating Guidance</p>
       </div>
     );

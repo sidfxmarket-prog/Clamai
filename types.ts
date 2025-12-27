@@ -1,8 +1,13 @@
 
 export enum Mood {
   HAPPY = '😊',
+  CALM = '😌',
+  EXCITED = '🤩',
   NEUTRAL = '😐',
-  SAD = '😔'
+  SAD = '😔',
+  ANXIOUS = '😟',
+  ANGRY = '😠',
+  TIRED = '😴'
 }
 
 export interface MoodEntry {
@@ -15,6 +20,7 @@ export interface MoodEntry {
 export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
+  timestamp?: number;
 }
 
 export interface CrisisResource {

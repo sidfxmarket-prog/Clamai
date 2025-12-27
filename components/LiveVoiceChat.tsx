@@ -187,7 +187,8 @@ const LiveVoiceChat: React.FC = () => {
   return (
     <div className="h-full flex flex-col items-center justify-center bg-slate-900 text-white relative overflow-hidden">
       {/* Background Orbs */}
-      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-sky-500/10 rounded-full blur-[100px] transition-all duration-1000 ${isModelSpeaking ? 'scale-125 opacity-30' : 'scale-100 opacity-20'}`}></div>
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[100px] transition-all duration-1000 ${isModelSpeaking ? 'scale-125 opacity-30' : 'scale-100 opacity-20'}`}></div>
+      <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-pink-500/5 rounded-full blur-[100px]`}></div>
       
       {/* Top Header */}
       <div className="absolute top-12 left-0 right-0 px-8 flex justify-between items-center z-20">
@@ -198,7 +199,7 @@ const LiveVoiceChat: React.FC = () => {
           <i className="fa-solid fa-chevron-left"></i>
         </button>
         <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-md">
-          <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-emerald-400 animate-pulse' : 'bg-red-400'}`}></div>
+          <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-pink-400 animate-pulse' : 'bg-red-400'}`}></div>
           <span className="text-[10px] font-black uppercase tracking-widest text-white/70">
             {isConnected ? 'Connected' : 'Connecting...'}
           </span>
@@ -210,17 +211,17 @@ const LiveVoiceChat: React.FC = () => {
       <div className="relative flex flex-col items-center justify-center gap-12 z-10">
         <div className="relative w-64 h-64 flex items-center justify-center">
           {/* Animated Circles */}
-          <div className={`absolute inset-0 rounded-full border-2 border-sky-400/20 transition-all duration-1000 ${isConnected ? 'animate-ping' : ''}`}></div>
-          <div className={`absolute inset-4 rounded-full border border-sky-400/30 transition-all duration-[2000ms] ${isConnected ? 'animate-pulse' : ''}`}></div>
+          <div className={`absolute inset-0 rounded-full border-2 border-purple-400/20 transition-all duration-1000 ${isConnected ? 'animate-ping' : ''}`}></div>
+          <div className={`absolute inset-4 rounded-full border border-pink-400/30 transition-all duration-[2000ms] ${isConnected ? 'animate-pulse' : ''}`}></div>
           
           <div 
-            className={`w-40 h-40 rounded-full bg-gradient-to-br from-sky-400 to-indigo-500 shadow-[0_0_50px_rgba(56,189,248,0.3)] transition-all duration-500 transform ${isModelSpeaking ? 'scale-110 shadow-[0_0_80px_rgba(56,189,248,0.5)]' : 'scale-95'}`}
+            className={`w-40 h-40 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 shadow-[0_0_50px_rgba(168,85,247,0.3)] transition-all duration-500 transform ${isModelSpeaking ? 'scale-110 shadow-[0_0_80px_rgba(236,72,153,0.5)]' : 'scale-95'}`}
           >
           </div>
           
           {/* Speaking Indicator */}
           {isModelSpeaking && (
-             <div className="absolute -bottom-8 bg-sky-500 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest animate-bounce">
+             <div className="absolute -bottom-8 bg-purple-500 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest animate-bounce">
                Companion Speaking
              </div>
           )}
@@ -240,7 +241,7 @@ const LiveVoiceChat: React.FC = () => {
       <div className="absolute bottom-12 left-0 right-0 flex justify-center items-center gap-8 z-20">
         <button 
           onClick={initiateExit}
-          className="w-20 h-20 rounded-full bg-red-500 text-white flex items-center justify-center shadow-2xl shadow-red-500/20 active:scale-90 transition-all"
+          className="w-20 h-20 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-2xl shadow-rose-500/20 active:scale-90 transition-all"
         >
           <i className="fa-solid fa-phone-slash text-2xl"></i>
         </button>
@@ -251,7 +252,7 @@ const LiveVoiceChat: React.FC = () => {
         {[...Array(30)].map((_, i) => (
           <div 
             key={i} 
-            className="flex-1 bg-sky-400/30 rounded-t-full transition-all duration-150"
+            className="flex-1 bg-purple-400/30 rounded-t-full transition-all duration-150"
             style={{ 
               height: isConnected ? `${Math.random() * 100}%` : '0%',
               opacity: isModelSpeaking ? 0.8 : 0.2
@@ -277,7 +278,7 @@ const LiveVoiceChat: React.FC = () => {
               </button>
               <button 
                 onClick={handleEndCall}
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-black uppercase tracking-widest py-4 rounded-2xl transition-all shadow-lg shadow-red-500/20"
+                className="w-full bg-rose-500 hover:bg-rose-600 text-white font-black uppercase tracking-widest py-4 rounded-2xl transition-all shadow-lg shadow-rose-500/20"
               >
                 End Session
               </button>

@@ -32,20 +32,21 @@ async function decodeAudioData(
 }
 
 /**
- * Generates a soothing AI voice instruction using Gemini TTS.
- * The prompt is optimized for a calm, professional mental health guidance tone.
+ * Generates a soothing AI voice from text using Gemini TTS.
+ * @param text The text to speak
+ * @param ctx The AudioContext
+ * @param style Optional style hint (defaults to gentle/soothing)
  */
-export async function getVoiceInstruction(
+export async function getSpeechBuffer(
   text: string,
-  audioContext: AudioContext
+  ctx: AudioContext,
+  style: string = "Gentle, soothing, and empathetic."
 ): Promise<AudioBuffer | null> {
   try {
-    // Instantiate AI right before use
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     
-    // We add specific behavioral cues to the prompt to ensure a "calm and soothing" delivery
-    const prompt = `Style: Gentle, soothing, and slow. Purpose: Mental health breathing guidance. 
-    Instruction: ${text}`;
+    const prompt = `Style: ${style} Purpose: Support. 
+    Content: ${text}`;
 
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash-preview-tts",
@@ -54,7 +55,7 @@ export async function getVoiceInstruction(
         responseModalities: [Modality.AUDIO],
         speechConfig: {
           voiceConfig: {
-            prebuiltVoiceConfig: { voiceName: 'Kore' }, // Kore has a warm, balanced tone
+            prebuiltVoiceConfig: { voiceName: 'Kore' }, 
           },
         },
       },
@@ -63,12 +64,20 @@ export async function getVoiceInstruction(
     const base64Audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
     if (base64Audio) {
       const audioBytes = decodeBase64(base64Audio);
-      return await decodeAudioData(audioBytes, audioContext);
+      return await decodeAudioData(audioBytes, ctx);
     }
   } catch (error) {
-    console.error("AI Guidance Generation Error:", error);
+    console.error("TTS Generation Error:", error);
   }
   return null;
+}
+
+// Keeping this for backward compatibility with BreathingExercise.tsx
+export async function getVoiceInstruction(
+  text: string,
+  audioContext: AudioContext
+): Promise<AudioBuffer | null> {
+  return getSpeechBuffer(text, audioContext, "Gentle, soothing, and slow breathing guidance.");
 }
 
 export function playBuffer(buffer: AudioBuffer, ctx: AudioContext): Promise<void> {

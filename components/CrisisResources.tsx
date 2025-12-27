@@ -45,7 +45,7 @@ const CrisisResources: React.FC = () => {
   };
 
   return (
-    <div className="p-6 h-full flex flex-col bg-red-50 animate-in fade-in duration-500 scroll-container pb-32">
+    <div className="p-6 h-full flex flex-col bg-rose-50/30 animate-in fade-in duration-500 scroll-container pb-32">
       <header className="mb-8 pt-6">
         <h2 className="text-2xl font-extrabold text-red-900 tracking-tight">Get Help Now</h2>
         <p className="text-red-700 opacity-80 text-sm mt-2">You don't have to go through this alone. Reach out to verified professional helplines in India.</p>

@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#f8fafc">
+  <meta name="theme-color" content="#fff7f0">
   <title>Calm Companion</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,10 +14,13 @@
   <style>
     :root {
       --app-height: 100%;
+      --lavender: #a78bfa;
+      --soft-pink: #f472b6;
+      --peach: #fff7f0;
     }
     html, body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #f8fafc;
+      background-color: var(--peach);
       margin: 0;
       padding: 0;
       height: 100vh;
@@ -26,6 +29,7 @@
       overscroll-behavior: none;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
+      color: #1e293b;
     }
     #root {
       height: 100%;
@@ -34,7 +38,6 @@
     .safe-top { padding-top: env(safe-area-inset-top); }
     .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
     
-    /* Smooth Scroll for sub-containers */
     .scroll-container {
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
@@ -44,13 +47,49 @@
       display: none;
     }
 
-    /* Native-like transitions */
-    .page-enter {
-      animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    /* Glassmorphism Classes */
+    .glass {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(10px); }
+
+    .glass-dark {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Elegant Transitions */
+    .page-enter {
+      animation: slideInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    .float {
+      animation: floating 3s ease-in-out infinite;
+    }
+    @keyframes floating {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* Custom Gradients */
+    .bg-main-grad {
+      background: linear-gradient(135deg, #a78bfa 0%, #f472b6 100%);
+    }
+
+    /* Tap feedback */
+    .tap-active:active {
+      transform: scale(0.96);
+      opacity: 0.9;
     }
   </style>
 <script type="importmap">

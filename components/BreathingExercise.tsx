@@ -146,11 +146,11 @@ const BreathingExercise: React.FC<BreathingExerciseProps> = ({
 
   const getCircleColor = () => {
     switch (currentPhase.type) {
-      case 'Inhale': return 'bg-sky-400';
-      case 'Hold': return 'bg-emerald-400';
-      case 'Exhale': return 'bg-indigo-400';
-      case 'HoldOut': return 'bg-amber-400';
-      default: return 'bg-sky-400';
+      case 'Inhale': return 'bg-purple-400';
+      case 'Hold': return 'bg-pink-400';
+      case 'Exhale': return 'bg-fuchsia-400';
+      case 'HoldOut': return 'bg-rose-400';
+      default: return 'bg-purple-400';
     }
   };
 
@@ -177,7 +177,7 @@ const BreathingExercise: React.FC<BreathingExerciseProps> = ({
         
         <div 
           key={`circle-${phaseIndex}`}
-          className={`w-32 h-32 rounded-full shadow-2xl transition-all shadow-sky-200/50 ${getCircleColor()}`}
+          className={`w-32 h-32 rounded-full shadow-2xl transition-all shadow-purple-200/50 ${getCircleColor()}`}
           style={{ 
             transform: `scale(${getScale()})`,
             transitionTimingFunction: 'linear', 
@@ -189,17 +189,17 @@ const BreathingExercise: React.FC<BreathingExerciseProps> = ({
       <div className="w-full max-w-xs space-y-6 relative z-10">
         <div className="flex justify-between items-center text-xs font-black text-slate-400 uppercase tracking-widest">
           <div className="flex items-center gap-3">
-             <span className="tabular-nums font-bold text-slate-600 bg-white/50 px-2 py-1 rounded-lg border border-white/50">
+             <span className="tabular-nums font-bold text-purple-600 bg-white/50 px-2 py-1 rounded-lg border border-purple-100/50">
               {Math.floor(remainingTime / 60)}:{(remainingTime % 60).toString().padStart(2, '0')}
             </span>
             <button 
               onClick={() => setIsMusicOn(!isMusicOn)}
-              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isMusicOn ? 'bg-sky-100 text-sky-600 border border-sky-200' : 'bg-slate-100 text-slate-400 border border-slate-200'}`}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isMusicOn ? 'bg-purple-100 text-purple-600 border border-purple-200' : 'bg-slate-100 text-slate-400 border border-slate-200'}`}
               title={isMusicOn ? "Mute Music" : "Unmute Music"}
             >
               <div className="relative">
                 {isMusicOn && !isPaused && (
-                  <span className="absolute -inset-1 rounded-full bg-sky-400/20 animate-ping"></span>
+                  <span className="absolute -inset-1 rounded-full bg-purple-400/20 animate-ping"></span>
                 )}
                 <i className={`fa-solid ${isMusicOn ? 'fa-music' : 'fa-volume-mute'}`}></i>
               </div>
@@ -207,7 +207,7 @@ const BreathingExercise: React.FC<BreathingExerciseProps> = ({
           </div>
           <button 
             onClick={() => setIsPaused(!isPaused)}
-            className="text-sky-600 bg-white shadow-sm border border-slate-100 px-4 py-2 rounded-2xl transition-all active:scale-90 flex items-center gap-2 font-bold"
+            className="text-purple-600 bg-white shadow-sm border border-purple-100 px-4 py-2 rounded-2xl transition-all active:scale-90 flex items-center gap-2 font-bold"
           >
             {isPaused ? <i className="fa-solid fa-play"></i> : <i className="fa-solid fa-pause"></i>}
             {isPaused ? 'Resume' : 'Pause'}
@@ -215,7 +215,7 @@ const BreathingExercise: React.FC<BreathingExerciseProps> = ({
         </div>
         <div className="h-2 bg-slate-200/50 rounded-full overflow-hidden backdrop-blur-sm">
           <div 
-            className="h-full bg-sky-500 shadow-[0_0_10px_rgba(14,165,233,0.5)] transition-all duration-1000 ease-linear"
+            className="h-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.5)] transition-all duration-1000 ease-linear"
             style={{ width: `${((totalDurationSeconds - remainingTime) / totalDurationSeconds) * 100}%` }}
           />
         </div>

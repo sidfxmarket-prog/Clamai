@@ -19,28 +19,52 @@ const Navigation = () => {
 
   const navItems = [
     { path: '/', icon: 'fa-house', label: 'Home' },
-    { path: '/mood', icon: 'fa-chart-line', label: 'Journal' },
-    { path: '/chat', icon: 'fa-comment-dots', label: 'AI' },
-    { path: '/profile', icon: 'fa-user-astronaut', label: 'Me' },
+    { path: '/mood', icon: 'fa-feather', label: 'Journal' },
+    { path: '/rescue', icon: 'fa-wind', label: 'Rescue', isBig: true },
+    { path: '/chat', icon: 'fa-sparkles', label: 'AI' },
+    { path: '/profile', icon: 'fa-user', label: 'Me' },
   ];
 
   return (
-    <div className="fixed bottom-6 left-0 right-0 px-6 z-50 pointer-events-none">
-      <nav className="max-w-md mx-auto bg-white/80 backdrop-blur-2xl border border-white/40 h-16 rounded-[2rem] flex justify-around items-center px-4 shadow-[0_8px_32px_rgba(0,0,0,0.08)] pointer-events-auto">
+    <div className="fixed bottom-8 left-0 right-0 px-4 z-50 pointer-events-none">
+      <nav className="max-w-md mx-auto glass h-20 rounded-[2.5rem] flex justify-between items-center px-4 shadow-[0_20px_50px_rgba(0,0,0,0.12)] pointer-events-auto relative">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
+          
+          if (item.isBig) {
+            return (
+              <Link 
+                key={item.path}
+                to={item.path} 
+                className="relative flex flex-col items-center justify-center -mt-12 tap-active"
+              >
+                <div className="w-16 h-16 rounded-full bg-main-grad flex items-center justify-center text-white shadow-[0_12px_24px_rgba(167,139,250,0.4)] border-4 border-white transition-transform duration-300 hover:scale-105 active:scale-95">
+                  <i className={`fa-solid ${item.icon} text-2xl`}></i>
+                </div>
+                <span className="text-[9px] font-black uppercase tracking-widest mt-2 bg-main-grad bg-clip-text text-transparent inline-block">
+                  {item.label}
+                </span>
+              </Link>
+            );
+          }
+
           return (
             <Link 
               key={item.path}
               to={item.path} 
-              className={`relative flex flex-col items-center justify-center w-12 h-12 transition-all duration-300 ${isActive ? 'text-sky-600 scale-110' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`relative flex flex-col items-center justify-center w-12 h-12 transition-all duration-500 tap-active ${isActive ? 'scale-110' : 'text-slate-400 hover:text-slate-600'}`}
             >
-              <i className={`fa-solid ${item.icon} text-lg mb-0.5`}></i>
-              <span className={`text-[9px] font-bold uppercase tracking-widest transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0 h-0'}`}>
+              <div className={`relative flex items-center justify-center transition-all duration-500 ${isActive ? '-translate-y-1' : ''}`}>
+                <i className={`fa-solid ${item.icon} text-lg ${isActive ? 'text-purple-600' : ''}`}></i>
+                {isActive && (
+                  <div className="absolute -inset-2 bg-purple-100/40 rounded-full -z-10 animate-pulse"></div>
+                )}
+              </div>
+              <span className={`text-[9px] font-black uppercase tracking-widest mt-1 transition-all duration-500 ${isActive ? 'opacity-100 scale-100 bg-main-grad bg-clip-text text-transparent inline-block' : 'opacity-0 scale-75 h-0 overflow-hidden'}`}>
                 {item.label}
               </span>
               {isActive && (
-                <div className="absolute -bottom-1 w-1 h-1 bg-sky-600 rounded-full animate-pulse"></div>
+                <div className="absolute -bottom-1 w-1.5 h-1.5 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full"></div>
               )}
             </Link>
           );
@@ -71,8 +95,13 @@ const App: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-slate-50 flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-sky-100 border-t-sky-500 rounded-full animate-spin"></div>
+      <div className="fixed inset-0 bg-[#fff7f0] flex items-center justify-center">
+        <div className="relative">
+          <div className="w-16 h-16 border-4 border-purple-100 border-t-purple-500 rounded-full animate-spin"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <i className="fa-solid fa-leaf text-purple-400"></i>
+          </div>
+        </div>
       </div>
     );
   }
@@ -83,8 +112,12 @@ const App: React.FC = () => {
 
   return (
     <HashRouter>
-      <div className="fixed inset-0 bg-slate-50 flex justify-center items-center overflow-hidden">
-        <main className="w-full h-full max-w-md bg-white relative shadow-2xl md:h-[90vh] md:rounded-[3rem] md:overflow-hidden overflow-hidden flex flex-col">
+      <div className="fixed inset-0 bg-[#fff7f0] flex justify-center items-center overflow-hidden">
+        {/* Aesthetic dynamic background elements */}
+        <div className="absolute top-[-20%] left-[-20%] w-[80%] h-[80%] bg-purple-100/30 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="absolute bottom-[-20%] right-[-20%] w-[80%] h-[80%] bg-pink-100/30 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <main className="w-full h-full max-w-md bg-white/40 backdrop-blur-sm relative md:h-[90vh] md:rounded-[3.5rem] md:overflow-hidden md:shadow-[0_40px_100px_rgba(0,0,0,0.1)] flex flex-col border border-white/60">
           <div className="flex-1 overflow-hidden relative">
             <Routes>
               <Route path="/" element={<Home />} />
